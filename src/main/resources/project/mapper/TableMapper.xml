@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project.mapper.TableMapper">
+	<resultMap type="project.domain.Table" id="TableRM">
+		<id property="id" column="ID" />
+		<result property="name" column="NAME" />
+	</resultMap>
+	<resultMap type="project.domain.Cols" id="ColsRM">
+		<id property="colid" column="COLID" />
+		<result property="params" column="NAME" />
+		<result property="type" column="TYPE" />
+		<result property="unique" column="UNIQUE" />
+		<result property="tableId" column="TABLEID" />
+	</resultMap>
+	
+	<!-- 创建自由库的 table -->
+	<update id="createTable" parameterType="java.util.Map"
+		statementType="STATEMENT">
+		create table if not exists ${tablename}
+		<foreach collection="keys" item="k" index="index" open="("
+			separator="," close=");">
+			${k}
+		</foreach>
+	</update>
+	<!-- 未完善的查询方法 -->
+	<select id="select" parameterType="string" resultType="java.util.HashMap">
+		SELECT *
+		FROM ${_parameter}
+
+	</select>
+	
+	<!-- 查询总条数 -->
+	<select id="selectCounts" parameterType="string" resultType="int">
+		SELECT count(*) FROM ${_parameter}
+
+	</select>
+	
+	<!-- 分页查询方法 -->
+	<select id="selectByPages" parameterType="map" resultType="map">
+		SELECT * FROM ${tablename} limit #{offset},#{pagesize}
+
+	</select>
+	
+	<!-- 模糊查询 -->
+	<select id="selectLike" parameterType="map" resultType="map" >
+		SELECT 
+		  * 
+		FROM
+		  ${tablename}
+	    <where>
+	    	${params} LIKE CONCAT(CONCAT('%', #{text}), '%')
+	    </where>
+	    	limit #{offset},#{pagesize}
+	</select>
+	<!-- 模糊查询条数 -->
+	<select id="selectLikeCount" parameterType="map" resultType="int" >
+		SELECT 
+		  count(*) 
+		FROM
+		  ${tablename}
+	    <where>
+	    	${params} LIKE CONCAT(CONCAT('%', #{text}), '%')
+	    </where>
+	</select>
+	
+	<!-- 添加自由库信息 -->
+	<insert id="addTable" parameterType="string">
+		INSERT INTO tableinfo
+		VALUES
+		(NULL, #{tablename})
+
+	</insert>
+	
+	<!-- 查找自由库id -->
+	<select id="findTableIdByName" parameterType="string"
+		resultType="int">
+		SELECT
+		id
+		FROM
+		tableinfo
+		WHERE NAME = #{tablename}
+	</select>
+	
+	<!-- 查找自由库名称 -->
+	<select id="findTableNameById" parameterType="int" resultType="string">
+		SELECT
+		name
+		FROM
+		tableinfo
+		WHERE ID = #{tableId}
+	</select>
+	
+	<!-- 添加列 -->
+	<insert id="addCol" parameterType="project.domain.Cols">
+		INSERT INTO colinfo
+		VALUES
+		(NULL, #{params}, #{type} , #{unique}, #{tableId})
+	</insert>
+	
+	<!-- 返回库信息 -->
+	<select id="findTables" resultMap="TableRM">
+		SELECT
+		*
+		FROM
+		tableinfo
+	</select>
+	
+	<!-- 返回列信息 -->
+	<select id="findColsByTableId" resultMap="ColsRM">
+		SELECT
+		*
+		FROM
+		colinfo
+		WHERE tableId = #{tableId}
+	</select>
+	
+	<!-- 根据 id 查询列名 -->
+	<select id="findColNameByColid" parameterType="int" resultType="string">
+		SELECT
+		NAME
+		FROM
+		colinfo
+		WHERE colid = #{colid}
+	</select>
+	<!-- 以下为删除自由库方法 -->
+	<!-- 删除自由库的表 -->
+	<update id="dropTable" parameterType="string">
+		drop table ${_parameter}
+	</update>
+	
+	<!-- 在自由库信息中删除自由库 -->
+	<delete id="delTable" parameterType="int">
+		delete from tableinfo
+		where
+		ID = #{tableId}
+	</delete>
+	
+	<!-- 在列信息中删除列 -->
+	<delete id="delCols" parameterType="int">
+		delete from colinfo
+		where
+		tableId = #{tableId}
+	</delete>
+	
+	<!-- 修改列 -->
+	<update id="changeCol" parameterType="map">
+		<!-- ${_parameter} -->
+		alter table ${tableName} change ${oldName} ${newName} ${type}
+	</update>
+	
+	<!-- 在表格中插入列 -->
+	<update id="insertCol" parameterType="map">
+		<!-- ${_parameter} -->
+		alter table ${tableName} add column ${columnName} ${type}
+	</update>
+	
+	<!-- 更新列信息 -->
+	<update id="updateColInfo" parameterType="project.domain.Cols">
+		UPDATE
+		colinfo
+		<set>
+			<if test="params!=null">name = #{params},</if>
+			<if test="type!=null">type = #{type},</if>
+		</set>
+		<where>
+			colid = #{colid}
+		</where>
+	</update>
+	
+	<!-- 从自由库的表中删除 -->
+	<update id="dropCol" parameterType="map">
+		alter table ${tableName} drop
+		column ${columnName}
+	</update>
+	
+	<!-- 从列信息中删除列 -->
+	<delete id="delCol" parameterType="int">
+		delete from colinfo
+		where
+		colid
+		= #{colid}
+	</delete>
+
+</mapper>

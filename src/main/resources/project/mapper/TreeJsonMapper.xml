@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project.mapper.TreeJsonMapper">
+	<resultMap type="project.domain.TreeJson" id="orgMap">
+		<id property="id" column="dept_id" />
+		<result property="text" column="dept_name" />
+		<result property="pid" column="fdept_id" />
+	</resultMap>
+	<!--获取所有组织机构信息 -->
+	<select id="getOrgInfo" resultMap="orgMap">
+		SELECT
+			dept_id,
+			dept_name,
+			fdept_id
+		FROM
+			dept
+	</select>
+</mapper> 
