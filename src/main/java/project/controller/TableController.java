@@ -323,7 +323,7 @@ public class TableController {
 	public Map<String, Object> selectLike(Integer tableId, String text,
 			Integer colid, Integer pageNum, Integer pagesize) {
 		// 要模糊查询的列
-		String params = tableService.findColNameByColid(colid);
+		String params = tableService.findColNameByColId(colid);
 		// 自由库名称
 		String tablename = tableService.findTableNameById(tableId);
 		// 封装查询参数

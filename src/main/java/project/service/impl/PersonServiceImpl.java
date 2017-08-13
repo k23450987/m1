@@ -17,16 +17,16 @@ public class PersonServiceImpl implements PersonService {
         return personDao.selectAll();
     }
 
-    public List<Person> selectByName(String p_name) {
-        return personDao.selectByName(p_name);
+    public List<Person> selectByName(String name) {
+        return personDao.selectByName(name);
     }
 
-    public List<Person> selectById(Integer job_id) {
-        return personDao.selectById(job_id);
+    public List<Person> selectByJobId(Integer jobId) {
+        return personDao.selectById(jobId);
     }
 
-    public void delete(Integer person_id) {
-        personDao.delete(person_id);
+    public void delete(Integer id) {
+        personDao.delete(id);
     }
 
     public void insert(Person person) {
@@ -41,8 +41,8 @@ public class PersonServiceImpl implements PersonService {
         personDao.updateJobInfo(person);
     }
 
-    public Person select(Integer person_id) {
-        return personDao.select(person_id);
+    public Person select(Integer id) {
+        return personDao.select(id);
     }
 
 }

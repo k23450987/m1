@@ -135,7 +135,7 @@ public class PersonController {
 	@RequestMapping("/personListJson.action")
 	public List<Person> findAllPersonsJson(Integer jobId) {
 		// 将查询到的所有员工信息添加到页面
-		return personService.selectById(jobId);
+		return personService.selectByJobId(jobId);
 
 	}
 

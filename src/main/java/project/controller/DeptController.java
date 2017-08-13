@@ -74,7 +74,7 @@ public class DeptController {
     }
 
     /**
-     * ajax验证
+     * 验证
      */
     @ResponseBody
     @RequestMapping("/deptVerify.action")

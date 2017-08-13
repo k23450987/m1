@@ -72,43 +72,4 @@ public class TreeJson implements Serializable {
 	public void setIconCls(String iconCls) {
 		this.iconCls = iconCls;
 	}
-
-	/**
-	 * 往树里添加节点
-	 * @param nodes 节点
-	 * @param id ID
-	 * @return 树
-	 */
-	public static List<TreeJson> buildtree(List<TreeJson> nodes, int id) {
-		List<TreeJson> treeJsons = new ArrayList<TreeJson>();
-		for (TreeJson treeJson : nodes) {
-			TreeJson node = new TreeJson();
-			node.setId(treeJson.getId());
-			node.setText(treeJson.getText());
-			if (id == treeJson.getPid()) {
-				node.setChildren(buildtree(nodes, node.getId()));
-				treeJsons.add(node);
-			}
-		}
-		/*
-		 * for (TreeJson treeJson : treeJsons) { if (treeJson.getPid()==0) {
-		 * treeJson.setState("closed"); } }
-		 */
-		return treeJsons;
-	}
-
-	/**
-	 * 将根节点的 state 设置为 "closed"
-	 * @param treeList 树
-	 * @return 树
-	 */
-	public static List<TreeJson> formatTree(List<TreeJson> treeList) {
-		for (TreeJson treeJson : treeList) {
-			if (treeJson.getChildren().size() != 0) {
-				TreeJson.formatTree(treeJson.getChildren());
-				treeJson.setState("closed");
-			}
-		}
-		return treeList;
-	}
 }

@@ -19,13 +19,12 @@ public class TableServiceImpl implements TableService {
     private TableDao tableDao;
 
     public void createTable(Map<String, Object> map) {
-
         tableDao.createTable(map);
     }
 
     public List<Map<String, Object>> select(Integer tableId) {
-        String tablename = this.findTableNameById(tableId);
-        return tableDao.select(tablename);
+        String tableName = this.findTableNameById(tableId);
+        return tableDao.select(tableName);
     }
 
     public PageInfo<Map<String, Object>> selectPage(Integer tableId, Integer pageNum) {
@@ -46,12 +45,12 @@ public class TableServiceImpl implements TableService {
         return new PageInfo<>(tableDao.selectLike(map));
     }
 
-    public void addTable(String tablename) {
-        tableDao.addTable(tablename);
+    public void addTable(String tableName) {
+        tableDao.addTable(tableName);
     }
 
-    public Integer findTableIdByName(String tablename) {
-        return tableDao.findTableIdByName(tablename);
+    public Integer findTableIdByName(String tableName) {
+        return tableDao.findTableIdByName(tableName);
     }
 
     public String findTableNameById(Integer tableId) {
@@ -76,8 +75,8 @@ public class TableServiceImpl implements TableService {
         tableDao.delCols(tableId);
     }
 
-    public String findColNameByColid(Integer colid) {
-        return tableDao.findColNameByColid(colid);
+    public String findColNameByColId(Integer colId) {
+        return tableDao.findColNameByColid(colId);
     }
 
     public void edit(Cols cols, String tableName) {
@@ -89,7 +88,7 @@ public class TableServiceImpl implements TableService {
         if (type.equals("varchar")) {
             type = type + "(30)";
         }
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("tableName", tableName);
         map.put("oldName", oldName);
         map.put("newName", newName);
@@ -98,14 +97,11 @@ public class TableServiceImpl implements TableService {
         tableDao.changeCol(map);
         // 在列信息的表中修改
         tableDao.updateColInfo(cols);
-        // System.out.println("----");
-        // System.out.println(sql);
     }
 
     public void insertCol(Cols cols, String tableName) {
         String columnName = cols.getParams();
         if (!(columnName == null || columnName.length() <= 0)) {
-
             // String sql =
             // "alter table "+tableName+" add column "+columnName+" ";
             String type = cols.getType();
@@ -113,7 +109,7 @@ public class TableServiceImpl implements TableService {
             if (type.equals("varchar")) {
                 type = type + "(30)";
             }
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> map = new HashMap<>();
             map.put("tableName", tableName);
             map.put("columnName", columnName);
             map.put("type", type);
@@ -131,12 +127,12 @@ public class TableServiceImpl implements TableService {
         tableDao.dropCol(map);
     }
 
-    public void delCol(Integer colid) {
-        tableDao.delCol(colid);
+    public void delCol(Integer colId) {
+        tableDao.delCol(colId);
     }
 
-    public Integer selectCounts(String tablename) {
-        return tableDao.selectCounts(tablename);
+    public Integer selectCounts(String tableName) {
+        return tableDao.selectCounts(tableName);
     }
 
     public Integer selectLikeCount(Map<String, Object> map) {
