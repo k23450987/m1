@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project.dao.DeptDao">
+
+	<resultMap type="project.domain.Dept" id="DeptRM">
+		<id property="id" column="DEPT_ID" />
+		<result property="name" column="DEPT_NAME" />
+		<result property="parentName" column="FDEPT_NAME" />
+		<result property="parentId" column="FDEPT_ID" />
+	</resultMap>
+
+	<update id="setNull" parameterType="int">
+        UPDATE
+            dept
+		<set>
+		    FDEPT_ID = 0
+		</set>
+		<where>
+            DEPT_ID = #{id}
+        </where>
+	</update>
+
+	<select id="selectByParentDeptId" parameterType="int" resultMap="DeptRM">
+        SELECT
+            *
+        FROM
+            dept d
+		<where>
+            d.`FDEPT_ID` = #{id}
+        </where>
+	</select>
+
+	<select id="select" resultMap="DeptRM">
+		SELECT 
+		  d.`DEPT_ID`,
+		  d.`DEPT_NAME`,
+		  d.`FDEPT_ID`,
+		  de.`DEPT_NAME` AS FDEPT_NAME
+		FROM
+		  dept d
+		    LEFT JOIN dept de
+		        ON d.`FDEPT_ID` = de.`DEPT_ID`
+		ORDER BY d.`FDEPT_ID`
+	</select>
+
+	<select id="selectOne" parameterType="int" resultMap="DeptRM">
+		SELECT 
+		  d.`DEPT_ID`,
+		  d.`DEPT_NAME`,
+		  d.`FDEPT_ID`,
+		  de.`DEPT_NAME` AS FDEPT_NAME
+		FROM
+		  dept d
+		LEFT JOIN dept de
+		    ON d.`FDEPT_ID` = de.`DEPT_ID`
+        <where>
+            d.`DEPT_ID` = #{id}
+        </where>
+		ORDER BY d.`FDEPT_ID`
+	</select>
+
+	<select id="selectByName" parameterType="string" resultMap="DeptRM">
+		SELECT 
+		  * 
+		FROM
+		  dept 
+		<where>
+            <if test="name != null and name != ''">
+                DEPT_NAME = #{name}
+            </if>
+        </where>
+	</select>
+
+	<select id="selectParent" resultMap="DeptRM">
+		SELECT 
+		  d.`DEPT_ID`,
+		  d.`DEPT_NAME`
+		FROM
+		  dept d
+	</select>
+
+	<insert id="insert" parameterType="project.domain.Dept" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO dept (DEPT_NAME, FDEPT_ID)
+        VALUES
+          (#{name}, #{parentId})
+	</insert>
+
+	<insert id="insertFather" parameterType="project.domain.Dept" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO dept (DEPT_NAME, FDEPT_ID)
+        VALUES
+          (#{name}, #{id})
+	</insert>
+
+	<delete id="delete" parameterType="int">
+		DELETE 
+		FROM
+		  dept 
+		<where>
+            DEPT_ID = #{id}
+        </where>
+	</delete>
+
+	<update id="updateParent" parameterType="project.domain.Dept">
+        UPDATE
+            dept
+        <set>
+            FDEPT_ID = #{parentId}
+        </set>
+        <where>
+            DEPT_ID = #{id}
+        </where>
+	</update>
+
+	<update id="update" parameterType="project.domain.Dept">
+        UPDATE
+            dept
+		<set>
+            <if test="name != null and name != ''">DEPT_NAME = #{name},</if>
+            <if test="parentName != null and parentName != ''">FDEPT_NAME = #{parentName},</if>
+            FDEPT_ID = #{parentId},
+		</set>
+		<where>
+            DEPT_ID = #{id}
+        </where>
+	</update>
+
+</mapper>

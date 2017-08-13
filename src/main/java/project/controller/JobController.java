@@ -24,10 +24,10 @@ public class JobController {
 	 */
 	@RequestMapping("/jobList.action")
 	public String findJobs(Model model) {
-		List<Job> jobs = jobService.selectAllJob();
+		List<Job> jobs = jobService.selectAll();
 		// 将查询到的所有岗位信息传到页面
 		model.addAttribute("jobs", jobs);
-		return "/manage/jobManage/list.jsp";
+		return "/manage/jobManage/list";
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class JobController {
 	@RequestMapping("/jobDelete.action")
 	public String deleteJob(Integer job_id, RedirectAttributes redirectAttributes) {
 		// 调用删除方法
-		jobService.deleteJob(job_id);
+		jobService.delete(job_id);
 		// 重定向到岗位列表
 		redirectAttributes.addFlashAttribute("message", "删除成功");
 		return "redirect:/jobList.action";
@@ -48,9 +48,9 @@ public class JobController {
 	@RequestMapping("/jobToAdd.action")
 	public String toInsert(Model model) {
 		// 将部门名称，部门id传到update.jsp页面
-		model.addAttribute("depts", deptService.findFaDepts());
+		model.addAttribute("depts", deptService.selectFather());
 		// 跳转到添加页面
-		return "/manage/jobManage/add.jsp";
+		return "/manage/jobManage/add";
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class JobController {
 	@RequestMapping("/jobAdd.action")
 	public String insertJob(Job job, RedirectAttributes redirectAttributes) {
 		// 调用添加方法
-		jobService.insertJob(job);
+		jobService.insert(job);
 		// 重定向查询页面
 		redirectAttributes.addFlashAttribute("message", "添加成功");
 		return "redirect:/jobList.action";
@@ -71,10 +71,10 @@ public class JobController {
 	@RequestMapping("/jobToUpdate.action")
 	public String toUpdateJob(Model model, Integer job_id) {
 		// 将要修改的岗位实体传到update.jsp页面
-		model.addAttribute("job", jobService.selectOneJob(job_id));
+		model.addAttribute("job", jobService.select(job_id));
 		// 将部门名称，部门id传到update.jsp页面
-		model.addAttribute("depts", deptService.findFaDepts());
-		return "/manage/jobManage/update.jsp";
+		model.addAttribute("depts", deptService.selectFather());
+		return "/manage/jobManage/update";
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class JobController {
 	@RequestMapping("/jobUpdate.action")
 	public String updateJob(Job job, RedirectAttributes redirectAttributes) {
 		// System.out.println(job);
-		jobService.updateJob(job);
+		jobService.update(job);
 		// 重定向查询页面
 		redirectAttributes.addFlashAttribute("message", "修改成功");
 		return "true";
@@ -97,9 +97,8 @@ public class JobController {
 	@RequestMapping("/JobListJson.action")
 	public List<Job> findJson(Integer dept_id) {
 		// 查询到所有部门详细信息
-		List<Job> jobs = jobService.selectJobs(dept_id);
 		// 传值到页面
-		return jobs;
+		return jobService.selectJobs(dept_id);
 
 	}
 
@@ -109,9 +108,8 @@ public class JobController {
 	@ResponseBody
 	@RequestMapping("/jobDeleteAjax.action")
 	public String deleteJobAjax(Integer job_id) {
-		System.out.println(job_id);
 		// 调用删除方法
-		jobService.deleteJob(job_id);
+		jobService.delete(job_id);
 		// 重定向到岗位列表
 		return "true";
 	}
@@ -122,8 +120,7 @@ public class JobController {
 	@ResponseBody
 	@RequestMapping("/jobsListJson.action")
 	public List<Job> findJobsJson() {
-		List<Job> jobs = jobService.selectAllJob();
 		// 将查询到的所有岗位信息传到页面
-		return jobs;
+		return jobService.selectAll();
 	}
 }

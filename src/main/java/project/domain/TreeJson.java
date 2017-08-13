@@ -75,9 +75,9 @@ public class TreeJson implements Serializable {
 
 	/**
 	 * 往树里添加节点
-	 * @param nodes
-	 * @param id
-	 * @return
+	 * @param nodes 节点
+	 * @param id ID
+	 * @return 树
 	 */
 	public static List<TreeJson> buildtree(List<TreeJson> nodes, int id) {
 		List<TreeJson> treeJsons = new ArrayList<TreeJson>();
@@ -99,8 +99,8 @@ public class TreeJson implements Serializable {
 
 	/**
 	 * 将根节点的 state 设置为 "closed"
-	 * @param treeList
-	 * @return
+	 * @param treeList 树
+	 * @return 树
 	 */
 	public static List<TreeJson> formatTree(List<TreeJson> treeList) {
 		for (TreeJson treeJson : treeList) {

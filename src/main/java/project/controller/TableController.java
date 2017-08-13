@@ -1,6 +1,7 @@
 package project.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,15 +53,14 @@ public class TableController {
 		tableService.addTable(tableName);
 		// 找到该表的id值
 		Integer tableId = tableService.findTableIdByName(tableName);
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		// 建表时的sql语句
 		List<String> keys = new ArrayList<>();
-		ObjectMapper om = new ObjectMapper();
 		// 用于设置外键的sql语句
 		StringBuilder pksb = new StringBuilder("primary key (");
 
 		try {
-			Cols[] cols = om.readValue(json, Cols[].class);
+			List<Cols> cols = JSON.parseArray(json, Cols.class);
 			for (Cols col : cols) {
 				col.setTableId(tableId);
 				tableService.addCol(col);
@@ -93,7 +93,7 @@ public class TableController {
 	public String toFindData(Integer tableId, Model model) {
 		model.addAttribute("tableId", tableId);
 
-		return "/pageTest.jsp";
+		return "/pageTest";
 	}
 
 	@RequestMapping("/findData.action")
@@ -113,7 +113,6 @@ public class TableController {
 				// }
 				key.add(string);
 			}
-
 		}
 		for (Map<String, Object> map : maps) {
 			for (String string : key) {
@@ -125,11 +124,10 @@ public class TableController {
 		}
 		for (Map<String, Object> map : maps) {
 			Set<String> keySet = map.keySet();
-
 			model.addAttribute("set", keySet);
 		}
 		model.addAttribute("maps", maps);
-		return "/manage/tableManage/hello.jsp";
+		return "/manage/tableManage/hello";
 	}
 
 	/**
@@ -142,7 +140,7 @@ public class TableController {
 		List<Map<String, Object>> datas = tableService.select(tableId);
 		List<Cols> cols = tableService.findColsByTableId(tableId);
 		// 构造返回
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		map.put("datas", datas);
 		map.put("cols", cols);
 		return map;
@@ -157,13 +155,10 @@ public class TableController {
 	@RequestMapping("/findData2")
 	public Map<String, Object> find2(Integer tableId, Integer pageNum) {
 		// 获取查询结果
-		List<Map<String, Object>> datas = tableService.selectPage(tableId,
-				pageNum);
-		List<Cols> cols = tableService.findColsByTableId(tableId);
+        PageInfo<Map<String, Object>> datas = tableService.selectPage(tableId, pageNum);
+        List<Cols> cols = tableService.findColsByTableId(tableId);
 		// 构造返回
-		Map<String, Object> map = new HashMap<String, Object>();
-		String tableName = tableService.findTableNameById(tableId);
-		map.put("count", tableService.selectCounts(tableName));
+		Map<String, Object> map = new HashMap<>();
 		map.put("datas", datas);
 		map.put("cols", cols);
 		return map;
@@ -189,7 +184,7 @@ public class TableController {
 	 * sBuffer.append(cols.getParams()+" "+cols.getType()+"(30)"); if
 	 * (cols.getUnique().equals("true")) {
 	 * sBuffer.append(" "+"not null primary key auto_increment"); }
-	 * keys.add(sBuffer.toString()); } return "/login.jsp"; }
+	 * keys.add(sBuffer.toString()); } return "/login"; }
 	 */
 
 	/**
@@ -199,7 +194,7 @@ public class TableController {
 	public String tableList(Model model) {
 		List<Table> tables = tableService.findTables();
 		model.addAttribute("tables", tables);
-		return "/manage/tableManage/list.jsp";
+		return "/manage/tableManage/list";
 	}
 
 	/**
@@ -209,7 +204,7 @@ public class TableController {
 	public String colsList(Integer tableId, Model model) {
 		List<Cols> cols = tableService.findColsByTableId(tableId);
 		model.addAttribute("cols", cols);
-		return "/manage/tableManage/colsList.jsp";
+		return "/manage/tableManage/colsList";
 	}
 
 	/**
@@ -240,9 +235,9 @@ public class TableController {
 		model.addAttribute("tableName", tableName);
 		List<Map<String, Object>> maps = tableService.select(tableId);
 		if (maps.size() > 0) {
-			return "/manage/tableManage/colsList2.jsp";
+			return "/manage/tableManage/colsList2";
 		} else {
-			return "/manage/tableManage/colsEdit.jsp";
+			return "/manage/tableManage/colsEdit";
 		}
 	}
 
@@ -252,13 +247,12 @@ public class TableController {
 	@ResponseBody
 	@RequestMapping("/tableEdit.action")
 	public String tableEdit(String json, String tableName) {
-		ObjectMapper om = new ObjectMapper();
 		try {
 			// json转对象
-			Cols[] cols = om.readValue(json, Cols[].class);
+			List<Cols> cols = JSON.parseArray(json, Cols.class);
 			for (Cols col : cols) {
 				// 判断自由库的这列是已有的还是新增的
-				if (col.getColid() != null) {
+				if (col.getId() != null) {
 					// 已有的，修改
 					tableService.edit(col, tableName);
 				} else {
@@ -296,7 +290,7 @@ public class TableController {
 	 */
 	@RequestMapping("/toAddTable.action")
 	public String toAddTable() {
-		return "/manage/tableManage/addtable.jsp";
+		return "/manage/tableManage/addtable";
 
 	}
 
@@ -321,36 +315,30 @@ public class TableController {
 	@RequestMapping("/getCollist.action")
 	public List<Cols> getCollist(Integer tableId) {
 		// 获取当前自由库的列
-		List<Cols> list = tableService.findColsByTableId(tableId);
-		return list;
+        return tableService.findColsByTableId(tableId);
 	}
 
 	@ResponseBody
 	@RequestMapping("/selectLike.action")
 	public Map<String, Object> selectLike(Integer tableId, String text,
 			Integer colid, Integer pageNum, Integer pagesize) {
-		// 模糊查询的条件
+		// 要模糊查询的列
 		String params = tableService.findColNameByColid(colid);
 		// 自由库名称
 		String tablename = tableService.findTableNameById(tableId);
-		Integer offset = (pageNum - 1) * pagesize;
 		// 封装查询参数
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("tablename", tablename);
+		Map<String, Object> map = new HashMap<>();
+        map.put("tablename", tablename);
 		map.put("params", params);
 		map.put("text", text);
-		map.put("offset", offset);
-		map.put("pagesize", pagesize);
 		// 返回查询结果
-		List<Map<String, Object>> datas = tableService.selectLike(map);
-		// 返回列
+        PageInfo<Map<String, Object>> datas = tableService.selectLike(map, pageNum, pagesize);
+        // 返回列
 		List<Cols> cols = tableService.findColsByTableId(tableId);
 		// 封装查询结果
-		Map<String, Object> result = new HashMap<String, Object>();
-		Integer count = tableService.selectLikeCount(map);
+		Map<String, Object> result = new HashMap<>();
 		result.put("cols", cols);
 		result.put("datas", datas);
-		result.put("count", count);
 		return result;
 	}
 }

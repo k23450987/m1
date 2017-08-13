@@ -1,4 +1,4 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java"  pageEncoding="UTF-8"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -24,7 +24,7 @@
 
 <body>
 	<div align="center">
-		<font size="20">欢迎使用企业管理系统</font><br/>
+		<span>欢迎使用企业管理系统</span><br/>
 		<a href="<%=path%>/toLogin.action">进入系统</a>
 	</div>
 </body>

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project.dao.PersonDao">
+	<resultMap type="project.domain.Person" id="PersonRM">
+		<id property="id" column="PERSON_ID" />
+		<result property="name" column="P_NAME" />
+		<result property="age" column="AGE" />
+		<result property="info" column="INFO" />
+		<result property="deptId" column="DEPT_ID" />
+		<result property="jobId" column="JOB_ID" />
+		<result property="jobName" column="JOB_NAME" />
+		<result property="deptName" column="DEPT_NAME" />
+	</resultMap>
+	<select id="selectAll" resultMap="PersonRM">
+		SELECT
+			a.PERSON_ID,
+			a.P_NAME,
+			a.AGE,
+			a.INFO,
+			a.DEPT_ID,
+			a.JOB_ID,
+			a.JOB_NAME,
+			b.DEPT_NAME
+		FROM
+			(SELECT
+				p.`PERSON_ID`,
+				p.`P_NAME`,
+				p.`AGE`,
+				p.`INFO`,
+				p.`DEPT_ID`,
+				p.`JOB_ID`,
+				j.`JOB_NAME`
+			FROM
+				person p
+				LEFT JOIN job j
+					ON p.`JOB_ID` = j.`JOB_ID`) a
+			LEFT JOIN
+				(SELECT
+					p.PERSON_ID,
+					d.`DEPT_ID`,
+					d.`DEPT_NAME`
+				FROM
+					person p
+					LEFT JOIN dept d
+						ON p.`DEPT_ID` = d.`DEPT_ID`) b
+				ON a.PERSON_ID = b.PERSON_ID
+	</select>
+	<select id="select" parameterType="int" resultMap="PersonRM">
+		SELECT
+			a.PERSON_ID,
+			a.P_NAME,
+			a.AGE,
+            a.INFO,
+			a.DEPT_ID,
+			a.JOB_ID,
+			a.JOB_NAME,
+			b.DEPT_NAME
+		FROM
+			(SELECT
+				p.`PERSON_ID`,
+				p.`P_NAME`,
+				p.`AGE`,
+				p.`INFO`,
+				p.`DEPT_ID`,
+				p.`JOB_ID`,
+				j.`JOB_NAME`
+			FROM
+				person p
+				LEFT JOIN job j
+					ON p.`JOB_ID` = j.`JOB_ID`) a
+		LEFT JOIN
+			(SELECT
+				p.PERSON_ID,
+				d.`DEPT_ID`,
+				d.`DEPT_NAME`
+			FROM
+				person p
+				LEFT JOIN dept d
+					ON p.`DEPT_ID` = d.`DEPT_ID`) b
+		ON a.PERSON_ID = b.PERSON_ID
+		<where>
+			a.PERSON_ID = #{id}
+		</where>
+	</select>
+	<select id="selectByName" parameterType="string" resultMap="PersonRM">
+        SELECT
+            a.PERSON_ID,
+            a.P_NAME,
+            a.AGE,
+            a.INFO,
+            a.DEPT_ID,
+            a.JOB_ID,
+            a.JOB_NAME,
+            b.DEPT_NAME
+        FROM
+            (SELECT
+                p.`PERSON_ID`,
+                p.`P_NAME`,
+                p.`AGE`,
+                p.`INFO`,
+                p.`DEPT_ID`,
+                p.`JOB_ID`,
+                j.`JOB_NAME`
+            FROM
+                person p
+            LEFT JOIN job j
+                ON p.`JOB_ID` = j.`JOB_ID`) a
+        LEFT JOIN
+            (SELECT
+                p.PERSON_ID,
+                d.`DEPT_ID`,
+                d.`DEPT_NAME`
+            FROM
+                person p
+                LEFT JOIN dept d
+                    ON p.`DEPT_ID` = d.`DEPT_ID`) b
+            ON a.PERSON_ID = b.PERSON_ID
+        <where>
+            a.P_NAME LIKE #{name}
+        </where>
+	</select>
+	<select id="selectById" parameterType="int" resultMap="PersonRM">
+        SELECT
+            a.PERSON_ID,
+            a.P_NAME,
+            a.AGE,
+            a.INFO,
+            a.DEPT_ID,
+            a.JOB_ID,
+            a.JOB_NAME,
+            b.DEPT_NAME
+        FROM
+            (SELECT
+                p.`PERSON_ID`,
+                p.`P_NAME`,
+                p.`AGE`,
+                p.`INFO`,
+                p.`DEPT_ID`,
+                p.`JOB_ID`,
+                j.`JOB_NAME`
+            FROM
+                person p
+                LEFT JOIN job j
+                    ON p.`JOB_ID` = j.`JOB_ID`) a
+            LEFT JOIN
+                (SELECT
+                  p.`PERSON_ID`,
+                  d.`DEPT_ID`,
+                  d.`DEPT_NAME`
+                FROM
+                  person p
+                  LEFT JOIN dept d
+                    ON p.`DEPT_ID` = d.`DEPT_ID`) b
+                ON a.PERSON_ID = b.PERSON_ID
+        <where>
+            a.JOB_ID = #{id}
+        </where>
+	</select>
+	<delete id="delete" parameterType="int">
+		delete from person
+		<where>
+            PERSON_ID = #{id}
+        </where>
+	</delete>
+	<insert id="insert" parameterType="project.domain.Person" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO person (P_NAME, AGE, INFO, DEPT_ID, JOB_ID)
+        VALUES
+          (#{name}, #{age}, #{info}, #{deptId}, #{jobId})
+	</insert>
+	<update id="updateInfo" parameterType="project.domain.Person">
+        UPDATE
+            person
+        <set>
+            <if test="name != null and name != ''">P_NAME = #{name},</if>
+            <if test="age != 0">AGE = #{age},</if>
+            <if test="info != null and info != ''">INFO = #{info},</if>
+            <if test="deptId != 0">DEPT_ID = #{deptId},</if>
+            <if test="jobId != 0">JOB_ID = #{jobId},</if>
+        </set>
+        <where>
+            PERSON_ID = #{id}
+        </where>
+	</update>
+	<update id="updateJobInfo" parameterType="project.domain.Person">
+        UPDATE
+            person
+        <set>
+            <if test="deptId != 0">dept_id = #{deptId},</if>
+            <if test="jobId != 0">job_id = #{jobId},</if>
+        </set>
+        <where>
+            PERSON_ID = #{id}
+        </where>
+	</update>
+	<!-- <insert id="insert" parameterType="project.domain.Person">
+		INSERT INTO PERSON
+		(PERSON_ID,NAME,AGE,INFO,DEPT_ID,JOB_ID)
+		VALUES
+		(#{id},#{name},#{age},#{info},#{dept_id},#{job_id})
+	</insert>
+	<update id="update" parameterType="project.domain.Person">
+		update person
+		set
+		<if test="name!=null">NAME = #{name},</if>
+		<if test="age!=null">AGE = #{age},</if>
+		<if test="info!=null">INFO = #{remark},</if>
+		<if test="dept_id!=null">DEPT_ID = #{dept_id},</if>
+		<if test="job_id!=null">JOB_ID = #{job_id},</if>
+		where
+		PERSON_ID=#{id}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from person
+		where
+		PERSON_ID = #{id}
+	</delete>
+	<select id="select" parameterType="map" resultMap="PersonRM">
+		select NAME,AGE,INFO from person
+		<where>
+		<if test="name!=null">and NAME like #{name}</if>
+		<if test="dept_id!=null">and age>=#{ageStart}</if>
+		<if test="ageEnd!=null"><![CDATA[and age <=]]> #{ageEnd}</if>
+		</where>
+	</select> -->
+</mapper>

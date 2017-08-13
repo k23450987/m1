@@ -3,32 +3,37 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="project.mapper.UserMapper">
+<mapper namespace="project.dao.UserDao">
+
 	<resultMap type="project.domain.User" id="UserRM">
-		<id property="user_id" column="user_id" />
+		<id property="id" column="USER_ID" />
 		<result property="username" column="username" />
 		<result property="password" column="password" />
 	</resultMap>
-	<select id="login" parameterType="map" resultMap="UserRM">
-		SELECT 
-		  * 
+
+	<select id="login" parameterType="project.domain.User" resultMap="UserRM">
+		SELECT
+		  *
 		FROM
-		  USER u 
-		WHERE 
-		u.username = #{username} 
-		AND 
+		  USER u
+		WHERE
+		u.username = #{username}
+		AND
 		u.password = #{password}
 	</select>
+
 	<select id="check" parameterType="string" resultType="string">
-		SELECT 
-		  username 
+		SELECT
+		  username
 		FROM
-		  USER 
+		  USER
 		WHERE username = #{username}
 	</select>
-	<insert id="reg" parameterType="project.domain.User">
-		INSERT INTO USER (username, password) 
+
+	<insert id="reg" parameterType="project.domain.User" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO USER (username, password)
 		VALUES
-		(#{username},#{password})
+		(#{username}, #{password})
 	</insert>
+
 </mapper>

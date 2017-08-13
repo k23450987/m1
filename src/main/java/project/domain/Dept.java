@@ -7,57 +7,70 @@ public class Dept implements Serializable {
 	/**
 	 * 部门id
 	 */
-	private Integer dept_id;
+	private Integer id;
 	/**
 	 * 部门名称
 	 */
-	private String dept_name;
+	private String name;
 	/**
 	 * 父部门名称
 	 */
-	private String fdept_name;
+	private String parentName;
 	/**
 	 * 父部门id
 	 */
-	private Integer fdept_id;
+	private Integer parentId;
 
-	/* 属性 get,set 方法 */
-	public Integer getDept_id() {
-		return dept_id;
-	}
+    public Dept() {
 
-	public void setDept_id(Integer dept_id) {
-		this.dept_id = dept_id;
-	}
+    }
 
-	public String getDept_name() {
-		return dept_name;
-	}
+    public Dept(Integer id, String name, String parentName, Integer parentId) {
+        this.id = id;
+        this.name = name;
+        this.parentName = parentName;
+        this.parentId = parentId;
+    }
 
-	public void setDept_name(String dept_name) {
-		this.dept_name = dept_name;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public Integer getFdept_id() {
-		return fdept_id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setFdept_id(Integer fdept_id) {
-		this.fdept_id = fdept_id;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getFdept_name() {
-		return fdept_name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setFdept_name(String fdept_name) {
-		this.fdept_name = fdept_name;
-	}
+    public String getParentName() {
+        return parentName;
+    }
 
-	@Override
-	public String toString() {
-		return "Dept [dept_id=" + dept_id + ", dept_name=" + dept_name
-				+ ", fdept_name=" + fdept_name + ", fdept_id=" + fdept_id + "]";
-	}
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
 
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    @Override
+    public String toString() {
+        return "Dept{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", parentName='" + parentName + '\'' +
+                ", parentId=" + parentId +
+                '}';
+    }
 }

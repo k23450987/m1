@@ -30,8 +30,8 @@ public class PersonController {
 	@RequestMapping("/personList.action")
 	public String findAllPersons(Model model) {
 		// 将查询到的所有员工信息添加到页面
-		model.addAttribute("persons", personService.selectAllPersons());
-		return "/manage/personManage/list.jsp";
+		model.addAttribute("persons", personService.selectAll());
+		return "/manage/personManage/list";
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class PersonController {
 	public String selectPersonByName(Model model, String p_name) {
 		// 将查询到的所有员工信息添加到页面
 		model.addAttribute("persons",
-				personService.selectPersonByName("%" + p_name + "%"));
-		return "/manage/personManage/list.jsp";
+				personService.selectByName("%" + p_name + "%"));
+		return "/manage/personManage/list";
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class PersonController {
 	public String deletePerson(Integer person_id,
 			RedirectAttributes redirectAttributes) {
 		// 通过id删除
-		personService.deletePerson(person_id);
+		personService.delete(person_id);
 		redirectAttributes.addFlashAttribute("message", "删除成功");
 		return "redirect:/personList.action";
 	}
@@ -61,8 +61,8 @@ public class PersonController {
 	 * 跳转到添加页面
 	 */
 	@RequestMapping("/personToAdd.action")
-	public String toInsertPerson(Model model) {
-		return "/manage/personManage/add.jsp";
+	public String toInsertPerson() {
+		return "/manage/personManage/add";
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class PersonController {
 	public String insertPerson(Person person,
 			RedirectAttributes redirectAttributes) {
 		// 添加员工信息
-		personService.insertPerson(person);
+		personService.insert(person);
 		// 添加成功提示
 		redirectAttributes.addFlashAttribute("message", "添加成功");
 		// 重定向到所有员工信息
@@ -84,15 +84,15 @@ public class PersonController {
 	 */
 	@RequestMapping("/personToUpdate.action")
 	public String toUpdatePerson(Integer person_id, Model model) {
-		model.addAttribute("p", personService.selectOnePerson(person_id));
-		return "/manage/personManage/update.jsp";
+		model.addAttribute("p", personService.select(person_id));
+		return "/manage/personManage/update";
 	}
 
 	@ResponseBody
 	@RequestMapping("/personUpdate.action")
 	public String updatePerson(Person person) {
 		System.out.println(person);
-		personService.updatePersonInfo(person);
+		personService.updateInfo(person);
 		return "redirect:/personList.action";
 	}
 
@@ -103,9 +103,9 @@ public class PersonController {
 	 */
 	@RequestMapping("/personToManage.action")
 	public String toPersonManage(Integer person_id, Model model) {
-		model.addAttribute("p", personService.selectOnePerson(person_id));
-		model.addAttribute("depts", deptService.findFaDepts());
-		return "/manage/personManage/managedept.jsp";
+		model.addAttribute("p", personService.select(person_id));
+		model.addAttribute("depts", deptService.selectFather());
+		return "/manage/personManage/managedept";
 	}
 
 	/**
@@ -114,14 +114,14 @@ public class PersonController {
 	@RequestMapping("/personManage.action")
 	public String personManage(Person person, Model model,
 			RedirectAttributes redirectAttributes) {
-		personService.updatePersonJobInfo(person);
-		if (person.getJob_id() == null) {
+		personService.updateJobInfo(person);
+		if (person.getJobId() == null) {
 
 			model.addAttribute("jobs",
-					jobService.selectJobs(person.getDept_id()));
+					jobService.selectJobs(person.getDeptId()));
 			model.addAttribute("p",
-					personService.selectOnePerson(person.getPerson_id()));
-			return "/manage/personManage/managejob.jsp";
+					personService.select(person.getId()));
+			return "/manage/personManage/managejob";
 		} else {
 			redirectAttributes.addFlashAttribute("message", "操作成功");
 			return "redirect:/personList.action";
@@ -133,10 +133,9 @@ public class PersonController {
 	 */
 	@ResponseBody
 	@RequestMapping("/personListJson.action")
-	public List<Person> findAllPersonsJson(Integer job_id) {
+	public List<Person> findAllPersonsJson(Integer jobId) {
 		// 将查询到的所有员工信息添加到页面
-		List<Person> list = personService.selectPersonById(job_id);
-		return list;
+		return personService.selectById(jobId);
 
 	}
 
@@ -146,8 +145,7 @@ public class PersonController {
 	@ResponseBody
 	@RequestMapping("/personToManageJson.action")
 	public List<Dept> toPersonManageJson() {
-		List<Dept> list = deptService.findFaDepts();
-		return list;
+		return deptService.selectFather();
 	}
 
 	/**
@@ -165,10 +163,9 @@ public class PersonController {
 	 */
 	@ResponseBody
 	@RequestMapping("/personsList.action")
-	public List<Person> findPersonsJson(Model model) {
+	public List<Person> findPersonsJson() {
 		// 将查询到的所有员工信息添加到页面
-		List<Person> list = personService.selectAllPersons();
-		return list;
+		return personService.selectAll();
 
 	}
 

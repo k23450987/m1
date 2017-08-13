@@ -1,8 +1,6 @@
 package project.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -21,35 +19,29 @@ public class UserController {
 	/**
 	 * 前往管理页面
 	 */
-	@RequestMapping("toManage.action")
-	public String listAll(Model model) {
-
-		return "/manage/index.jsp";
+	@RequestMapping("/toManage.action")
+	public String listAll() {
+		return "/manage/index";
 	}
 
 	/**
 	 * 进行管理员用户登录操作
 	 */
 	@RequestMapping("/login.action")
-	public String login(String username, String password, Model model,
+	public String login(User user, Model model,
 			HttpSession httpSession) {
-
-		// 将页面传的用户名密码封装
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("username", username);
-		map.put("password", password);
-		List<User> list = userService.login(map);
+		List<User> list = userService.login(user);
 		// 判断是否查询到
 		if (list.size() != 0) {
-			for (User user : list) {
+			for (User u : list) {
 				// 成功!存到session
-				httpSession.setAttribute("user", user);
+				httpSession.setAttribute("user", u);
 			}
-			return "/success.jsp";
+			return "/success";
 		} else {
 			// 失败,返回错误信息
 			model.addAttribute("message", "用户名密码错误");
-			return "/fail.jsp";
+			return "/fail";
 		}
 	}
 
@@ -59,9 +51,9 @@ public class UserController {
 	@RequestMapping("/toLogin.action")
 	public String toLogin(HttpSession httpSession) {
 		if (httpSession.getAttribute("user") != null) {
-			return "/success.jsp";
+			return "/success";
 		}
-		return "/login.jsp";
+		return "/login";
 	}
 
 	/**
@@ -69,7 +61,7 @@ public class UserController {
 	 */
 	@RequestMapping("/toReg.action")
 	public String toReg() {
-		return "/reg.jsp";
+		return "/reg";
 	}
 
 	/**
@@ -79,11 +71,11 @@ public class UserController {
 	public String reg(String username, User user, Model model) {
 		if (!userService.check(username)) {
 			model.addAttribute("message", "注册失败，用户名已存在");
-			return "/reg.jsp";
+			return "/reg";
 		}
 		userService.reg(user);
 		model.addAttribute("message", "注册成功");
-		return "/login.jsp";
+		return "/login";
 	}
 
 	@ResponseBody
@@ -100,7 +92,7 @@ public class UserController {
 	 * testjson
 	 */
 	@ResponseBody
-	@RequestMapping("jsontest.spring")
+	@RequestMapping("/jsontest.spring")
 	public String jsonTest() {
 
 		String string = "[{\"name1\":\"123\"},{\"name2\":\"你好好\"},{\"name3\":\"你好好好\"}]";

@@ -2,50 +2,52 @@ package project.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import project.domain.Job;
 
 public interface JobDao {
 
-	/**
-	 * 查询所有工作岗位的方法
-	 * 
-	 * @return
-	 */
-	List<Job> selectAllJob();
+    /**
+     * 查询目前所有职位
+     *
+     * @return 职位
+     */
+    List<Job> selectAll();
 
-	/**
-	 * 根据岗位id删除岗位
-	 * 
-	 * @param job_id
-	 */
-	void deleteJob(Integer job_id);
+    /**
+     * 查询某部门下的岗位
+     *
+     * @return 职位
+     */
+    List<Job> selectJobs(Integer parentDeptId);
 
-	/**
-	 * 新增岗位
-	 * 
-	 * @param job
-	 */
-	void insertJob(Job job);
+    /**
+     * 根据id号删除岗位
+     *
+     * @param id 岗位的id
+     */
+    void delete(@Param("id") Integer id);
 
-	/**
-	 * 修改岗位信息
-	 * 
-	 * @param job
-	 */
-	void updateJob(Job job);
+    /**
+     * 新增岗位
+     *
+     * @param job 岗位的实体
+     */
+    int insert(Job job);
 
-	/**
-	 * 根据id查询某一具体岗位的详细信息
-	 * 
-	 * @param job_id
-	 * @return
-	 */
-	Job selectOneJob(Integer job_id);
+    /**
+     * 修改岗位信息
+     *
+     * @param job 岗位的实体
+     */
+    void update(Job job);
 
-	/**
-	 * 查询某部门下的岗位
-	 * 
-	 * @return
-	 */
-	List<Job> selectJobs(Integer fdept_id);
+    /**
+     * 根据id查询某一具体岗位的详细信息
+     *
+     * @param id ID
+     * @return 职位
+     */
+    Job select(@Param("id") Integer id);
+
 }

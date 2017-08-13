@@ -1,4 +1,4 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java"  pageEncoding="UTF-8"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -33,22 +33,22 @@
 					thead += '<td>' + data.cols[i].params + '</td>';
 				}
 				thead += '</tr>';
-				$('#table thead').html(thead);
+				$('#table').find('thead').html(thead);
 				// 处理数据
 				if (data.datas && data.datas.length > 0) {
 					var tbody = '<tr>';
 					for (var i = 0; i < data.datas.length; i++) {
-						tbody += ''
+						tbody += '';
 						for (var j = 0; j < data.cols.length; j++) {
 							tbody += '<td>' + (data.datas[i][data.cols[j].params] ? data.datas[i][data.cols[j].params] : '') + '</td>';
 						}
 						tbody += '</tr>';
 					}
-					$('#table tbody').html(tbody);
+					$('#table').find('tbody').html(tbody);
 				}
 			}
 		}, 'json');
-	})
+	});
 	$(function() {
 		$('#dg').datagrid({
 			// fit : true,
@@ -81,7 +81,6 @@
 	});
 </script>
 </head>
-
 <body>
 	<table id="table">
 		<thead></thead>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project.dao.JobDao">
+	<resultMap type="project.domain.Job" id="JobRM">
+		<id property="id" column="JOB_ID" />
+		<result property="name" column="JOB_NAME" />
+		<result property="deptId" column="DEPT_ID" />
+		<result property="deptName" column="DEPT_NAME" />
+		<result property="parentDeptId" column="FDEPT_ID" />
+		<result property="parentDeptName" column="FDEPT_NAME" />
+	</resultMap>
+
+	<select id="selectAll" resultMap="JobRM">
+		SELECT
+		  a.JOB_ID,
+		  a.JOB_NAME,
+		  a.DEPT_ID,
+		  a.DEPT_NAME,
+		  b.FDEPT_ID,
+		  b.FDEPT_NAME
+		FROM
+		  (SELECT
+		    j.`JOB_ID`,
+		    j.`JOB_NAME`,
+		    d.`DEPT_ID`,
+		    d.`DEPT_NAME`
+		  FROM
+		    job j
+		    LEFT JOIN dept d
+		      ON j.`DEPT_ID` = d.`DEPT_ID`) a
+		  LEFT JOIN
+		    (SELECT
+		      d.`DEPT_ID`,
+		      d.`DEPT_NAME`,
+		      d.`FDEPT_ID`,
+		      de.`DEPT_NAME` AS FDEPT_NAME
+		    FROM
+		      dept d
+		      LEFT JOIN dept de
+		        ON d.`FDEPT_ID` = de.`DEPT_ID`) b
+		    ON a.DEPT_ID = b.DEPT_ID
+		    ORDER BY FDEPT_ID
+	</select>
+
+	<select id="selectJobs" parameterType="int" resultMap="JobRM">
+		SELECT
+		  a.JOB_ID,
+		  a.JOB_NAME,
+		  a.DEPT_ID,
+		  a.DEPT_NAME,
+		  b.FDEPT_ID,
+		  b.FDEPT_NAME
+		FROM
+		  (SELECT
+		    j.`JOB_ID`,
+		    j.`JOB_NAME`,
+		    d.`DEPT_ID`,
+		    d.`DEPT_NAME`
+		  FROM
+		    job j
+		    LEFT JOIN dept d
+		      ON j.`DEPT_ID` = d.`DEPT_ID`) a
+		  LEFT JOIN
+		    (SELECT
+		      d.`DEPT_ID`,
+		      d.`DEPT_NAME`,
+		      d.`FDEPT_ID`,
+		      de.`DEPT_NAME` AS FDEPT_NAME
+		    FROM
+		      dept d
+		      LEFT JOIN dept de
+		        ON d.`FDEPT_ID` = de.`DEPT_ID`) b
+		    ON a.DEPT_ID = b.DEPT_ID
+		<where>
+            a.DEPT_ID = #{DEPT_ID}
+        </where>
+	</select>
+
+	<select id="select" parameterType="int" resultMap="JobRM">
+		SELECT 
+		  a.JOB_ID,
+		  a.JOB_NAME,
+		  a.DEPT_ID,
+		  a.DEPT_NAME,
+		  b.FDEPT_ID,
+		  b.FDEPT_NAME
+		FROM
+		  (SELECT 
+		    j.`JOB_ID`,
+		    j.`JOB_NAME`,
+		    d.`DEPT_ID`,
+		    d.`DEPT_NAME`
+		  FROM
+		    job j 
+		    LEFT JOIN dept d 
+		      ON j.`DEPT_ID` = d.`DEPT_ID`) a
+		  LEFT JOIN 
+		    (SELECT 
+		      d.`DEPT_ID`,
+		      d.`DEPT_NAME`,
+		      d.`FDEPT_ID`,
+		      de.`DEPT_NAME` AS FDEPT_NAME
+		    FROM
+		      dept d 
+		      LEFT JOIN dept de 
+		        ON d.`FDEPT_ID` = de.`DEPT_ID`) b
+		    ON a.DEPT_ID = b.DEPT_ID
+		<where>
+            a.JOB_ID = #{id}
+        </where>
+	</select>
+
+	<delete id="delete" parameterType="int">
+		DELETE
+		FROM
+		  job
+		<where>
+            JOB_ID = #{id}
+        </where>
+	</delete>
+
+	<insert id="insert" parameterType="project.domain.Job" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO job (JOB_NAME, DEPT_ID)
+        VALUES
+          (#{name}, #{deptId})
+	</insert>
+
+    <update id="update" parameterType="project.domain.Job">
+        update job
+        <set>
+            <if test="name != null">JOB_NAME = #{name},</if>
+            DEPT_ID = #{deptId}
+        </set>
+        where
+            JOB_ID = #{id}
+    </update>
+
+</mapper>

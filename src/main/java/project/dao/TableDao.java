@@ -3,157 +3,165 @@ package project.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import project.domain.Cols;
 import project.domain.Table;
 
 public interface TableDao {
 
-	/**
-	 * 新建自由库
-	 */
-	void createTable(Map<String, Object> map);
+    /**
+     * 建表
+     *
+     * @param map 建表信息
+     */
+    void createTable(Map<String, Object> map);
 
-	/**
-	 * 查询自由库数据
-	 * 
-	 * @param tablename
-	 * @return
-	 */
-	List<Map<String, Object>> select(String tablename);
+    /**
+     * 查询
+     *
+     * @param tableName 表名
+     * @return 数据
+     */
+    List<Map<String, Object>> select(String tableName);
 
-	/**
-	 * 分页查询
-	 * 
-	 * @param map
-	 * @return
-	 */
-	List<Map<String, Object>> selectPage(Map<String, Object> map);
+    /**
+     * 分页查询
+     *
+     * @param map 查询参数
+     * @return 数据
+     */
+    List<Map<String, Object>> selectByPages(@Param("tableName") String tableName);
 
-	/**
-	 * 模糊查询
-	 * 
-	 * @param map
-	 * @return
-	 */
-	List<Map<String, Object>> selectLike(Map<String, Object> map);
 
-	/**
-	 * 添加库
-	 * 
-	 * @param tablename
-	 */
-	void addTable(String tablename);
+    /**
+     * 模糊查询
+     *
+     * @param map 查询参数
+     * @return 数据
+     */
+    List<Map<String, Object>> selectLike(Map<String, Object> map);
 
-	/**
-	 * 查找库id
-	 * 
-	 * @param tablename
-	 * @return
-	 */
-	Integer findTableIdByName(String tablename);
+    /**
+     * 查询条数
+     *
+     * @param map 查询参数
+     * @return 数据
+     */
+    Integer selectLikeCount(Map<String, Object> map);
 
-	/**
-	 * 查找库名称
-	 * 
-	 * @param tableId
-	 * @return
-	 */
-	String findTableNameById(Integer tableId);
+    /**
+     * 新建自由库
+     *
+     * @param tableName 表名
+     */
+    void addTable(@Param("tableName") String tableName);
 
-	/**
-	 * 添加行
-	 * 
-	 * @param cols
-	 */
-	void addCol(Cols cols);
+    /**
+     * 查找库id
+     *
+     * @param tableName 表名
+     * @return ID
+     */
+    Integer findTableIdByName(@Param("tableName") String tableName);
 
-	/**
-	 * 查询库
-	 * 
-	 * @return
-	 */
-	List<Table> findTables();
+    /**
+     * 查找库名称
+     *
+     * @param tableId 表 ID
+     * @return 表名
+     */
+    String findTableNameById(@Param("tableId") Integer tableId);
 
-	/**
-	 * 返回
-	 * 
-	 * @param tableId
-	 * @return
-	 */
-	List<Cols> findColsByTableId(Integer tableId);
+    /**
+     * 添加列
+     *
+     * @param cols 列
+     */
+    void addCol(Cols cols);
 
-	/**
-	 * 删除表
-	 * 
-	 * @param tablename
-	 */
-	void dropTable(String tablename);
+    /**
+     * 查找自由库表
+     *
+     * @return 表
+     */
+    List<Table> findTables();
 
-	/**
-	 * 删除表记录
-	 * 
-	 * @param tableId
-	 */
-	void delTable(Integer tableId);
+    /**
+     * 查找自由库的列
+     *
+     * @param tableId 表 ID
+     * @return 所有的列
+     */
+    List<Cols> findColsByTableId(@Param("tableId") Integer tableId);
 
-	/**
-	 * 删除行记录
-	 * 
-	 * @param tableId
-	 */
-	void delCols(Integer tableId);
+    /**
+     * 删除库
+     *
+     * @param tableName 表名
+     */
+    void dropTable(String tableName);
 
-	/**
-	 * 根据列的 id 返回列名
-	 * 
-	 * @param colid
-	 * @return
-	 */
-	String findColNameByColid(Integer colid);
+    /**
+     * 删除库的记录
+     *
+     * @param tableId 表 ID
+     */
+    void delTable(@Param("tableId") Integer tableId);
 
-	/**
-	 * 修改列
-	 * 
-	 * @param map
-	 */
-	void changeCol(Map<String, String> map);
+    /**
+     * 删除列的记录
+     *
+     * @param tableId 表 ID
+     */
+    void delCols(@Param("tableId") Integer tableId);
 
-	/**
-	 * 修改列信息
-	 * 
-	 * @param cols
-	 */
-	void updateColInfo(Cols cols);
+    /**
+     * 根据列id查询列名
+     *
+     * @param colId 列 ID
+     * @return 列名
+     */
+    String findColNameByColid(@Param("colId") Integer colId);
 
-	/**
-	 * 插入列
-	 * 
-	 * @param map
-	 */
-	void insertCol(Map<String, String> map);
+    /**
+     * 在自由库的表中修改列
+     *
+     * @param map 列信息
+     */
+    void changeCol(Map<String, String> map);
 
-	/**
-	 * 删除列
-	 * 
-	 * @param map
-	 */
-	void dropCol(Map<String, String> map);
+    /**
+     * 在列信息中修改
+     *
+     * @param cols 列信息
+     */
+    void updateColInfo(Cols cols);
 
-	/**
-	 * 删除列信息
-	 * 
-	 * @param colid
-	 */
-	void delCol(Integer colid);
+    /**
+     * 插入列
+     *
+     * @param map 列信息
+     */
+    void insertCol(Map<String, String> map);
 
-	/**
-	 * 获取查询条数
-	 * 
-	 * @param tablename
-	 * @return
-	 */
-	Integer selectCounts(String tablename);
-	
-	Integer selectLikeCount(Map<String, Object> map);
+    /**
+     * 删除列
+     *
+     * @param map 列信息
+     */
+    void dropCol(Map<String, String> map);
 
+    /**
+     * 删除列信息
+     *
+     * @param colId 列 ID
+     */
+    void delCol(@Param("colId") Integer colId);
+
+    /**
+     * 获取查询条数
+     *
+     * @param tableName 表名
+     */
+    Integer selectCounts(String tableName);
 }

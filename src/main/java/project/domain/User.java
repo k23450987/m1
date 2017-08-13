@@ -8,7 +8,7 @@ public class User implements Serializable {
 	/**
 	 * 用户id
 	 */
-	private Integer user_id;
+	private Integer id;
 	/**
 	 * 用户名
 	 */
@@ -18,12 +18,12 @@ public class User implements Serializable {
 	 */
 	private String password;
 
-	public Integer getUser_id() {
-		return user_id;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setUser_id(Integer user_id) {
-		this.user_id = user_id;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getUsername() {

@@ -8,83 +8,98 @@ public class Job implements Serializable {
 	/**
 	 * 职位id
 	 */
-	private Integer job_id;
+	private Integer id;
 	/**
 	 * 职位名称
 	 */
-	private String job_name;
+	private String name;
 	/**
 	 * 所属部门id
 	 */
-	private Integer dept_id;
+	private Integer deptId;
 	/**
 	 * 所属部门名称
 	 */
-	private String dept_name;
+	private String deptName;
 	/**
 	 * 所属部门父部门id
 	 */
-	private Integer fdept_id;
+	private Integer parentDeptId;
 	/**
 	 * 所属部门父部门名称
 	 */
-	private String fdept_name;
+	private String parentDeptName;
 
-	/* 属性 get,set 方法 */
-	public Integer getJob_id() {
-		return job_id;
+	public Job() {
 	}
 
-	public void setJob_id(Integer job_id) {
-		this.job_id = job_id;
+	public Job(Integer id, String name, Integer deptId, String deptName, Integer parentDeptId,
+			String parentDeptName) {
+		this.id = id;
+		this.name = name;
+		this.deptId = deptId;
+		this.deptName = deptName;
+		this.parentDeptId = parentDeptId;
+		this.parentDeptName = parentDeptName;
 	}
 
-	public String getJob_name() {
-		return job_name;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setJob_name(String job_name) {
-		this.job_name = job_name;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public Integer getDept_id() {
-		return dept_id;
+	public String getName() {
+		return name;
 	}
 
-	public void setDept_id(Integer dept_id) {
-		this.dept_id = dept_id;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getDept_name() {
-		return dept_name;
+	public Integer getDeptId() {
+		return deptId;
 	}
 
-	public void setDept_name(String dept_name) {
-		this.dept_name = dept_name;
+	public void setDeptId(Integer deptId) {
+		this.deptId = deptId;
 	}
 
-	public Integer getFdept_id() {
-		return fdept_id;
+	public String getDeptName() {
+		return deptName;
 	}
 
-	public void setFdept_id(Integer fdept_id) {
-		this.fdept_id = fdept_id;
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
 	}
 
-	public String getFdept_name() {
-		return fdept_name;
+	public Integer getParentDeptId() {
+		return parentDeptId;
 	}
 
-	public void setFdept_name(String fdept_name) {
-		this.fdept_name = fdept_name;
+	public void setParentDeptId(Integer parentDeptId) {
+		this.parentDeptId = parentDeptId;
+	}
+
+	public String getParentDeptName() {
+		return parentDeptName;
+	}
+
+	public void setParentDeptName(String parentDeptName) {
+		this.parentDeptName = parentDeptName;
 	}
 
 	@Override
 	public String toString() {
-		return "Job [job_id=" + job_id + ", job_name=" + job_name
-				+ ", dept_id=" + dept_id + ", dept_name=" + dept_name
-				+ ", fdept_id=" + fdept_id + ", fdept_name=" + fdept_name + "]";
+		return "Job{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", deptId=" + deptId +
+				", deptName='" + deptName + '\'' +
+				", parentDeptId=" + parentDeptId +
+				", parentDeptName='" + parentDeptName + '\'' +
+				'}';
 	}
-	
-
 }
