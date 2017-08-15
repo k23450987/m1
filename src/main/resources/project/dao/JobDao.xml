@@ -131,11 +131,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="update" parameterType="project.domain.Job">
         update job
         <set>
-            <if test="name != null">JOB_NAME = #{name},</if>
-            DEPT_ID = #{deptId}
+            <if test="name != null and name != ''">JOB_NAME = #{name},</if>
+	        <if test="deptId != null and deptId != ''">DEPT_ID = #{deptId},</if>
         </set>
-        where
+        <where>
             JOB_ID = #{id}
+        </where>
     </update>
 
 </mapper>

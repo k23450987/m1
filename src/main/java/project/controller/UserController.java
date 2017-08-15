@@ -3,6 +3,7 @@ package project.controller;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,8 +74,10 @@ public class UserController {
             model.addAttribute("message", "注册失败，用户名已存在");
             return "/reg";
         }
-        userService.reg(user);
-        model.addAttribute("message", "注册成功");
+        if (StringUtils.isNotBlank(user.getUsername()) && StringUtils.isNotBlank(user.getPassword())){
+            userService.reg(user);
+            model.addAttribute("message", "注册成功");
+        }
         return "/login";
     }
 

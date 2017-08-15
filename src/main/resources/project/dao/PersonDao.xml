@@ -175,10 +175,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             person
         <set>
             <if test="name != null and name != ''">P_NAME = #{name},</if>
-            <if test="age != 0">AGE = #{age},</if>
+            <if test="age != null and age != ''">AGE = #{age},</if>
             <if test="info != null and info != ''">INFO = #{info},</if>
-            <if test="deptId != 0">DEPT_ID = #{deptId},</if>
-            <if test="jobId != 0">JOB_ID = #{jobId},</if>
+            <if test="deptId != null and deptId != ''">DEPT_ID = #{deptId},</if>
+            <if test="jobId != null and jobId != ''">JOB_ID = #{jobId},</if>
         </set>
         <where>
             PERSON_ID = #{id}
@@ -188,8 +188,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         UPDATE
             person
         <set>
-            <if test="deptId != 0">dept_id = #{deptId},</if>
-            <if test="jobId != 0">job_id = #{jobId},</if>
+            <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
+            <if test="jobId != null and jobId != ''">job_id = #{jobId},</if>
         </set>
         <where>
             PERSON_ID = #{id}
